@@ -1,83 +1,686 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TileIQ - Okey & Rummikub Skor Tutucu</title>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
-    color: #fff;
-    min-height: 100vh;
-    line-height: 1.6;
-  }
-  .container { max-width: 700px; margin: 0 auto; padding: 60px 24px; }
-  .icon {
-    width: 96px; height: 96px; border-radius: 22px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 40px; font-weight: bold; margin: 0 auto 24px;
-    box-shadow: 0 8px 24px rgba(118, 75, 162, 0.4);
-  }
-  h1 { font-size: 36px; text-align: center; margin-bottom: 8px; }
-  .tagline { text-align: center; color: #a0a0c0; margin-bottom: 40px; font-size: 17px; }
-  .description {
-    background: rgba(255,255,255,0.05); padding: 24px; border-radius: 12px;
-    margin-bottom: 32px; font-size: 15px; color: #d0d0e0;
-  }
-  .stores {
-    display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
-    margin-bottom: 40px;
-  }
-  .store-btn {
-    background: #fff; color: #1a1a2e; padding: 14px 28px; border-radius: 12px;
-    text-decoration: none; font-weight: 600; display: inline-flex;
-    align-items: center; gap: 10px; transition: transform 0.2s;
-    min-width: 200px; justify-content: center;
-  }
-  .store-btn:hover { transform: translateY(-2px); }
-  .store-btn span { font-size: 17px; }
-  .links {
-    display: flex; gap: 24px; justify-content: center; flex-wrap: wrap;
-    padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.1);
-  }
-  .links a { color: #8090d0; text-decoration: none; font-size: 14px; }
-  .links a:hover { color: #fff; }
-  footer { text-align: center; margin-top: 40px; color: #606080; font-size: 13px; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MothenoX — Uygulamalarım</title>
+  <meta name="description" content="MothenoX — Hüseyin Motuk tarafından geliştirilen mobil ve web uygulamaları. Çocuklar için eğitici uygulamalar ve daha fazlası." />
+  <meta name="theme-color" content="#0a0a0a" />
+  <meta name="author" content="MothenoX" />
+
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="apple-touch-icon" href="assets/child-activities-icon.png" />
+
+  <meta property="og:title" content="MothenoX — Uygulamalarım" />
+  <meta property="og:description" content="Hüseyin Motuk'un geliştirdiği mobil ve web uygulamaları." />
+  <meta property="og:image" content="assets/mothenox.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://huseyinmotuk.github.io/" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --bg-2: #141414;
+      --surface: #1a1a1a;
+      --surface-hover: #222;
+      --border: #2a2a2a;
+      --text: #f5f5f5;
+      --text-dim: #a0a0a0;
+      --text-mute: #6a6a6a;
+      --red: #c80000;
+      --red-bright: #ff1a1a;
+      --red-dark: #8b0000;
+      --shadow-red: 0 20px 60px rgba(200, 0, 0, 0.25);
+      --shadow-card: 0 10px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+    h1, h2, h3, h4 {
+      font-family: 'Space Grotesk', 'Inter', sans-serif;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+
+    /* === NAV === */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10, 10, 10, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 0;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+    }
+    .brand img {
+      height: 38px;
+      width: auto;
+      display: block;
+      border-radius: 6px;
+    }
+    .nav-links { display: flex; align-items: center; gap: 28px; }
+    .nav-links a {
+      color: var(--text-dim);
+      font-weight: 500;
+      font-size: 0.92rem;
+      transition: color 0.2s ease;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links .nav-cta {
+      background: linear-gradient(110deg, #3a0000 0%, #8b0000 25%, #c80000 50%, #8b0000 75%, #3a0000 100%);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: 600;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 4px 12px rgba(120, 0, 0, 0.35);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    }
+    .nav-links .nav-cta:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.12);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 8px 20px rgba(200, 0, 0, 0.45);
+    }
+
+    @media (max-width: 720px) {
+      .nav-links a:not(.nav-cta) { display: none; }
+    }
+
+    /* === HERO === */
+    .hero {
+      position: relative;
+      padding: 120px 0 100px;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -40%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1200px;
+      height: 1200px;
+      background: radial-gradient(circle, rgba(200, 0, 0, 0.18) 0%, rgba(200, 0, 0, 0) 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+      -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 880px;
+      margin: 0 auto;
+    }
+
+    .hero-logo {
+      display: block;
+      width: 100%;
+      max-width: 780px;
+      margin: 0 auto 40px;
+      border-radius: 20px;
+      box-shadow: 0 30px 80px rgba(200, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      overflow: hidden;
+    }
+    .hero-logo img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .hero h2 {
+      font-size: clamp(1.5rem, 3.5vw, 2.4rem);
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+    .hero h2 .accent {
+      background: linear-gradient(90deg, #ff3a3a 0%, #ff8a3a 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p.lead {
+      font-size: 1.15rem;
+      color: var(--text-dim);
+      max-width: 640px;
+      margin: 0 auto 40px;
+    }
+    .hero-cta {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 26px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.98rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+      color: #fff;
+      box-shadow: 0 10px 30px rgba(200, 0, 0, 0.35);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 16px 40px rgba(200, 0, 0, 0.5); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border-color: var(--border);
+    }
+    .btn-ghost:hover { background: var(--surface); border-color: #444; }
+    .btn .arrow { transition: transform 0.2s ease; }
+    .btn:hover .arrow { transform: translateX(4px); }
+
+    /* === STATS STRIP === */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 24px;
+      max-width: 760px;
+      margin: 72px auto 0;
+      padding: 32px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+    }
+    .stat .num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #fff 0%, #ff5a5a 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .stat .label { color: var(--text-mute); font-size: 0.88rem; margin-top: 4px; }
+
+    /* === SECTION === */
+    section { padding: 100px 0; position: relative; }
+    .section-head {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 64px;
+    }
+    .section-tag {
+      display: inline-block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--red-bright);
+      margin-bottom: 14px;
+    }
+    .section-head h2 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      margin-bottom: 16px;
+    }
+    .section-head p { color: var(--text-dim); font-size: 1.05rem; }
+
+    /* === APPS SECTION (phone-mockup cards, side by side) === */
+    .apps-section {
+      background: linear-gradient(180deg, transparent 0%, rgba(200, 0, 0, 0.05) 100%);
+    }
+    .app-showcase-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 32px;
+      justify-items: center;
+    }
+    .app-showcase {
+      width: 100%;
+      max-width: 380px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    /* Phone mockup — dark themed, matching site */
+    .phone-mockup {
+      width: 260px;
+      height: 540px;
+      background: linear-gradient(145deg, #2a2a2a, #0f0f0f);
+      border-radius: 42px;
+      padding: 10px;
+      box-shadow:
+        0 30px 70px rgba(0, 0, 0, 0.6),
+        0 0 0 2px #333,
+        inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+      position: relative;
+      margin-bottom: 28px;
+      transition: transform 0.3s ease;
+    }
+    .app-showcase:hover .phone-mockup {
+      transform: translateY(-6px) rotate(-1deg);
+    }
+    .phone-mockup::before {
+      content: '';
+      position: absolute;
+      top: 14px; left: 50%;
+      transform: translateX(-50%);
+      width: 90px; height: 20px;
+      background: #0a0a0a;
+      border-radius: 0 0 14px 14px;
+      z-index: 3;
+    }
+    .phone-screen {
+      width: 100%; height: 100%;
+      border-radius: 34px;
+      overflow: hidden;
+      position: relative;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 30px;
+      background: linear-gradient(160deg, #ffb84d 0%, #ff6a1a 100%);
+    }
+    .phone-screen.cae {
+      background: linear-gradient(160deg, #ffb84d 0%, #ff6a1a 100%);
+    }
+    .phone-screen .screen-icon {
+      width: 130px; height: 130px;
+      border-radius: 28px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+      margin-bottom: 22px;
+      animation: bounce 3.2s ease-in-out infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+    .phone-screen .screen-title {
+      color: #fff;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.45rem;
+      font-weight: 700;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+      letter-spacing: 0.01em;
+    }
+    .phone-screen .screen-sub {
+      color: rgba(255, 255, 255, 0.92);
+      font-size: 0.92rem;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+
+    .app-showcase h3 {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+    }
+    .app-showcase .app-desc {
+      color: var(--text-dim);
+      font-size: 0.98rem;
+      margin-bottom: 22px;
+      max-width: 320px;
+    }
+    .app-showcase .app-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      color: #4ade80;
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+    .app-showcase .app-status::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: #4ade80;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #4ade80;
+    }
+    .app-showcase .app-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      align-items: center;
+    }
+    .btn-website {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: linear-gradient(110deg, #3a0000 0%, #8b0000 25%, #c80000 50%, #8b0000 75%, #3a0000 100%);
+      color: #fff;
+      padding: 14px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.98rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 10px 30px rgba(120, 0, 0, 0.35);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    }
+    .btn-website:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.12);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 16px 40px rgba(200, 0, 0, 0.5);
+    }
+    .btn-website svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+    /* Google Play button */
+    .btn-play {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: #000;
+      border: 1px solid #333;
+      color: #fff;
+      padding: 12px 22px;
+      border-radius: 10px;
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+    .btn-play:hover {
+      transform: translateY(-2px);
+      border-color: #555;
+      background: #0c0c0c;
+    }
+    .btn-play svg { width: 26px; height: 26px; flex-shrink: 0; }
+    .btn-play .play-text {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      line-height: 1.1;
+      text-align: left;
+    }
+    .btn-play .play-text .small {
+      font-size: 0.68rem;
+      color: #bbb;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+    .btn-play .play-text .big {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+
+    /* === ABOUT === */
+    .about {
+      background: #080808;
+    }
+    .about-inner {
+      max-width: 760px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .about .about-image {
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto 40px;
+      display: block;
+      border-radius: 20px;
+      box-shadow: var(--shadow-red);
+    }
+    .about h2 {
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      margin-bottom: 22px;
+    }
+    .about p {
+      color: var(--text-dim);
+      margin-bottom: 18px;
+      font-size: 1.05rem;
+    }
+    .about p strong { color: var(--text); }
+    .about .stack {
+      margin-top: 28px;
+      color: var(--text-mute);
+      font-size: 0.95rem;
+      letter-spacing: 0.02em;
+    }
+
+    /* === FOOTER === */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 56px 0 40px;
+      background: #060606;
+    }
+    .footer-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 22px;
+      text-align: center;
+    }
+    .footer-logo {
+      width: 200px;
+      height: auto;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(200, 0, 0, 0.25);
+    }
+    .footer-links {
+      display: flex;
+      gap: 22px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .footer-links a {
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      transition: color 0.2s ease;
+    }
+    .footer-links a:hover { color: var(--red-bright); }
+    .footer-contact {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+    }
+    .footer-contact:hover {
+      border-color: var(--red);
+      color: #ff5a5a;
+      background: var(--surface-hover);
+    }
+    .footer-contact svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .footer-copy {
+      color: var(--text-mute);
+      font-size: 0.85rem;
+    }
+
+    /* === REVEAL ANIMATION === */
+    @media (prefers-reduced-motion: no-preference) {
+      .reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.7s ease, transform 0.7s ease;
+      }
+      .reveal.in {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
 </head>
 <body>
-<div class="container">
-  <div class="icon">T</div>
-  <h1>TileIQ</h1>
-  <p class="tagline">Okey & 101 Skor Tutucu</p>
 
-  <div class="description">
-    101 Okey, Klasik Okey ve Rummikub için akıllı skor tutucu.
-    Otomatik puanlama, tam maç geçmişi ve PDF dışa aktarımı ile
-    kalem kâğıdı bırakın.
-  </div>
+  <nav>
+    <div class="container nav-inner">
+      <a href="#" class="brand">
+        <img src="assets/mothenox.webp" alt="MothenoX" />
+      </a>
+      <div class="nav-links">
+        <a href="#apps" class="nav-cta">Uygulamalar</a>
+        <a href="#about" class="nav-cta">Hakkımda</a>
+        <a href="#contact" class="nav-cta">İletişim</a>
+      </div>
+    </div>
+  </nav>
 
-  <div class="stores">
-    <a class="store-btn" href="https://apps.apple.com/app/id6766692446">
-      <span>App Store</span>
-    </a>
-    <a class="store-btn" href="https://play.google.com/store/apps/details?id=com.tileiq.app">
-      <span>Google Play</span>
-    </a>
-  </div>
+  <h1 class="visually-hidden" style="position:absolute;left:-9999px;">MothenoX — Uygulamalarım</h1>
 
-  <div class="links">
-    <a href="https://huseyinmotuk.github.io/tileiq-legal/privacy-policy.html">Gizlilik Politikası</a>
-    <a href="https://huseyinmotuk.github.io/tileiq-legal/support.html">Destek</a>
-    <a href="mailto:mothenox46@gmail.com">İletişim</a>
-  </div>
+  <!-- === GELİŞTİRDİĞİM UYGULAMALAR === -->
+  <section class="apps-section" id="apps">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-tag">Uygulamalarım</span>
+        <h2>Geliştirdiğim uygulamalar</h2>
+        <p>Aileler ve çocuklar için tasarlanmış, reklam ve takip içermeyen eğitici uygulamalar.</p>
+      </div>
+
+      <div class="app-showcase-grid">
+
+        <!-- CHILD ACTIVITIES -->
+        <div class="app-showcase reveal">
+          <div class="phone-mockup">
+            <div class="phone-screen cae">
+              <img src="assets/child-activities-icon.png" alt="Child Activities" class="screen-icon" />
+              <div class="screen-title">Child Activities</div>
+              <div class="screen-sub">Tap • Learn • Have fun</div>
+            </div>
+          </div>
+
+          <span class="app-status">Yayında</span>
+          <h3>Child Activities</h3>
+          <p class="app-desc">
+            10 dilde, 15 kategoride çocuk dostu öğrenme deneyimi. Sesli telaffuz,
+            boyama ve quiz modları ile.
+          </p>
+
+          <div class="app-buttons">
+            <a href="https://huseyinmotuk.github.io/child-activities-website/"
+               target="_blank" rel="noopener" class="btn-website">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M2 12h20"/>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+              </svg>
+              Child Activities Web Site
+            </a>
+
+            <a href="https://play.google.com/store/apps/details?id=com.childactivities.app"
+               target="_blank" rel="noopener" class="btn-play" aria-label="Google Play'den indir">
+              <svg viewBox="0 0 512 512" aria-hidden="true">
+                <path fill="#EA4335" d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1z"/>
+                <path fill="#FBBC04" d="M104.6 13c-1.4 0.5-12.6 6.5-12.6 25.2v435.6c0 18.7 11.2 24.7 12.6 25.2L325.3 277.7l-220.7-220.7-0.0-43.7z"/>
+                <path fill="#4285F4" d="M325.3 277.7L104.6 498.7 385.4 337.5l-60.1-60.1z"/>
+                <path fill="#34A853" d="M448.7 248.2l-63.3-36.3-65.6 65.6 65.6 65.6 64-36.3c19.2-11 19.2-47.6-0.7-58.6z"/>
+              </svg>
+              <span class="play-text">
+                <span class="small">GOOGLE PLAY'DEN</span>
+                <span class="big">İndir</span>
+              </span>
+            </a>
+          </div>
+        </div>
+
+        <!-- More apps will be added here side-by-side -->
+
+      </div>
+    </div>
+  </section>
+
+  <!-- === HAKKIMDA === -->
+  <section id="about" class="about">
+    <div class="container">
+      <div class="about-inner reveal">
+        <img src="assets/mothenox.webp" alt="MothenoX" class="about-image" />
+
+        <span class="section-tag">Hakkımda</span>
+        <h2>Merhaba, ben Hüseyin Motuk.</h2>
+
+        <p>
+          <strong>MothenoX</strong> takma adıyla, eğlenceli/eğitici/kaliteli zaman
+          geçirmenizi sağlayacak mobil/web uygulamaları geliştiriyorum.
+        </p>
+        <p>
+          Tasarımda sadelik, performansta hız ve kullanıcı gizliliğinde maksimum
+          koruma ile beraber uygulama geliştirme yaklaşımımın temel ilkeleri bu üçüdür.
+        </p>
+
+        <div class="stack">Flutter · Dart · Web · Tasarım sistemleri</div>
+      </div>
+    </div>
+  </section>
 
   <footer>
-    © 2026 Hüseyin Motuk · MothenoX
+    <div class="container footer-inner">
+      <a id="contact" href="https://mail.google.com/mail/?view=cm&fs=1&to=mothenox46@gmail.com&su=MothenoX%20%C4%B0leti%C5%9Fim" target="_blank" rel="noopener" class="footer-contact">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="14" rx="2"/>
+          <path d="m3 7 9 6 9-6"/>
+        </svg>
+        mothenox46@gmail.com
+      </a>
+
+      <div class="footer-links">
+        <a href="https://huseyinmotuk.github.io/child-activities-website/" target="_blank" rel="noopener">Child Activities</a>
+        <a href="https://github.com/huseyinmotuk" target="_blank" rel="noopener">GitHub</a>
+        <a href="#apps">Uygulamalar</a>
+        <a href="#about">Hakkımda</a>
+      </div>
+      <div class="footer-copy">
+        © <span id="year"></span> MothenoX · Hüseyin Motuk. Tüm hakları saklıdır.
+      </div>
+    </div>
   </footer>
-</div>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add('in');
+            io.unobserve(e.target);
+          }
+        }
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    } else {
+      document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+    }
+  </script>
 </body>
 </html>
