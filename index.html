@@ -39,7 +39,7 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
       background: var(--bg);
@@ -110,6 +110,15 @@
 
     @media (max-width: 720px) {
       .nav-links a:not(.nav-cta) { display: none; }
+      .container { padding: 0 14px; }
+      .nav-inner { padding: 12px 0; gap: 10px; }
+      .brand img { height: 30px; }
+      .nav-links { gap: 6px; }
+      .nav-links .nav-cta { padding: 7px 9px; font-size: 0.74rem; border-radius: 7px; }
+    }
+    @media (max-width: 360px) {
+      .brand img { height: 26px; }
+      .nav-links .nav-cta { padding: 6px 8px; font-size: 0.72rem; }
     }
 
     /* === HERO === */
@@ -439,6 +448,56 @@
       letter-spacing: 0.01em;
     }
 
+    .app-showcase .app-status.soon { color: #fbbf24; }
+    .app-showcase .app-status.soon::before { background: #fbbf24; box-shadow: 0 0 8px #fbbf24; }
+    .btn-play.soon { opacity: 0.5; cursor: not-allowed; }
+    .btn-play.soon:hover { transform: none; border-color: #333; background: #000; }
+
+    /* Phone screen themes */
+    .phone-screen.tiq { background: linear-gradient(165deg, #124d37 0%, #0a2e21 100%); }
+    .phone-screen.rd { background: #030303; }
+    .phone-screen.rd .screen-icon { box-shadow: none; object-fit: contain; }
+
+    /* === MOBILE: 2 columns === */
+    @media (max-width: 720px) {
+      section { padding: 64px 0; }
+      .section-head { margin-bottom: 40px; }
+      .app-showcase-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 28px 12px;
+        align-items: start;
+      }
+      .app-showcase { max-width: none; min-width: 0; }
+      .app-showcase:last-child:nth-child(odd) { grid-column: 1 / -1; width: calc(50% - 6px); justify-self: center; }
+      .phone-mockup {
+        width: 100%;
+        max-width: 170px;
+        height: auto;
+        aspect-ratio: 260 / 540;
+        border-radius: 28px;
+        padding: 6px;
+        margin-bottom: 16px;
+      }
+      .phone-mockup::before { top: 8px; width: 46px; height: 11px; border-radius: 0 0 8px 8px; }
+      .phone-screen { border-radius: 22px; padding: 12px; }
+      .phone-screen .screen-icon { width: 64px; height: 64px; border-radius: 15px; margin-bottom: 12px; }
+      .phone-screen .screen-title { font-size: 0.95rem; }
+      .phone-screen .screen-sub { font-size: 0.62rem; margin-top: 4px; }
+      .app-showcase h3 { font-size: 1.1rem; margin-bottom: 6px; }
+      .app-showcase .app-status { margin-bottom: 8px; font-size: 0.72rem; }
+      .app-showcase .app-desc { font-size: 0.82rem; line-height: 1.5; margin-bottom: 14px; }
+      .app-showcase .app-buttons { gap: 8px; }
+      .btn-website {
+        width: 100%; padding: 10px 8px; font-size: 0.8rem; gap: 6px; border-radius: 9px; text-align: center;
+      }
+      .btn-website svg { width: 14px; height: 14px; }
+      .btn-play { width: 100%; justify-content: center; padding: 8px 8px; gap: 8px; border-radius: 9px; }
+      .btn-play svg { width: 20px; height: 20px; }
+      .btn-play .play-text .small { font-size: 0.56rem; }
+      .btn-play .play-text .big { font-size: 0.88rem; }
+      .about .about-image { margin-bottom: 28px; }
+    }
+
     /* === ABOUT === */
     .about {
       background: #080808;
@@ -565,7 +624,7 @@
       <div class="section-head reveal">
         <span class="section-tag">Uygulamalarım</span>
         <h2>Geliştirdiğim uygulamalar</h2>
-        <p>Çocuklar için eğitici uygulamalar ve gerçekçi dedektif oyunları.</p>
+        <p>Çocuklar için eğitici uygulamalar, akıllı skor araçları ve gerçekçi dedektif oyunları.</p>
       </div>
 
       <div class="app-showcase-grid">
@@ -595,7 +654,7 @@
                 <path d="M2 12h20"/>
                 <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
               </svg>
-              Child Activities Web Site
+              Web Site
             </a>
 
             <a href="https://play.google.com/store/apps/details?id=com.childactivities.app"
@@ -614,17 +673,61 @@
           </div>
         </div>
 
+        <!-- TILE-IQ -->
+        <div class="app-showcase reveal">
+          <div class="phone-mockup">
+            <div class="phone-screen tiq">
+              <img src="https://play-lh.googleusercontent.com/mgEBqeEdujvBiWTpXRzo6NhopTb4TtaeyYAt9Z_dtdozP9EFW4O1YY_XPzBYPhIO9Vz-sCdsssjPQEhfqH-m=w240-h240" alt="Tile-IQ" class="screen-icon" />
+              <div class="screen-title">Tile-IQ</div>
+              <div class="screen-sub">Count • Track • Win</div>
+            </div>
+          </div>
+
+          <span class="app-status">Yayında</span>
+          <h3>Tile-IQ</h3>
+          <p class="app-desc">
+            101 Okey, Klasik Okey ve Rummikub için akıllı skor tutucu. Puanlar
+            otomatik hesaplanır, maç geçmişi ve PDF çıktısı ile.
+          </p>
+
+          <div class="app-buttons">
+            <a href="https://huseyinmotuk.github.io/tileiq/"
+               target="_blank" rel="noopener" class="btn-website">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M2 12h20"/>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+              </svg>
+              Web Site
+            </a>
+
+            <a href="https://play.google.com/store/apps/details?id=com.tileiq.app"
+               target="_blank" rel="noopener" class="btn-play" aria-label="Google Play'den indir">
+              <svg viewBox="0 0 512 512" aria-hidden="true">
+                <path fill="#EA4335" d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1z"/>
+                <path fill="#FBBC04" d="M104.6 13c-1.4 0.5-12.6 6.5-12.6 25.2v435.6c0 18.7 11.2 24.7 12.6 25.2L325.3 277.7l-220.7-220.7-0.0-43.7z"/>
+                <path fill="#4285F4" d="M325.3 277.7L104.6 498.7 385.4 337.5l-60.1-60.1z"/>
+                <path fill="#34A853" d="M448.7 248.2l-63.3-36.3-65.6 65.6 65.6 65.6 64-36.3c19.2-11 19.2-47.6-0.7-58.6z"/>
+              </svg>
+              <span class="play-text">
+                <span class="small">GOOGLE PLAY'DEN</span>
+                <span class="big">İndir</span>
+              </span>
+            </a>
+          </div>
+        </div>
+
         <!-- REALISTIC DETECTIVE -->
         <div class="app-showcase reveal">
           <div class="phone-mockup">
-            <div class="phone-screen cae" style="background:#030303;">
+            <div class="phone-screen rd">
               <img src="assets/realistic-detective-icon.png" alt="Realistic Detective" class="screen-icon" />
               <div class="screen-title">Realistic Detective</div>
               <div class="screen-sub">Investigate • Deduce • Accuse</div>
             </div>
           </div>
 
-          <span class="app-status">Yakında</span>
+          <span class="app-status soon">Yakında</span>
           <h3>Realistic Detective</h3>
           <p class="app-desc">
             Gerçekçi olay yerleri, ifadeler, telefon kayıtları ve ipuçlarıyla
@@ -632,11 +735,29 @@
           </p>
 
           <div class="app-buttons">
-            <a href="https://huseyinmotuk.github.io/realisticdetective/privacy.html"
-               target="_blank" rel="noopener" class="btn-website">Gizlilik Politikası</a>
-            <a href="https://huseyinmotuk.github.io/realisticdetective/terms.html"
-               target="_blank" rel="noopener" class="btn-website">Kullanım Koşulları</a>
-            <!-- Yayınlanınca Google Play butonu eklenecek: id=com.mothenox.realisticdetective -->
+            <a href="https://huseyinmotuk.github.io/realisticdetective/"
+               target="_blank" rel="noopener" class="btn-website">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M2 12h20"/>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+              </svg>
+              Web Site
+            </a>
+
+            <span class="btn-play soon" aria-disabled="true" title="Yakında Google Play'de">
+              <svg viewBox="0 0 512 512" aria-hidden="true">
+                <path fill="#EA4335" d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1z"/>
+                <path fill="#FBBC04" d="M104.6 13c-1.4 0.5-12.6 6.5-12.6 25.2v435.6c0 18.7 11.2 24.7 12.6 25.2L325.3 277.7l-220.7-220.7-0.0-43.7z"/>
+                <path fill="#4285F4" d="M325.3 277.7L104.6 498.7 385.4 337.5l-60.1-60.1z"/>
+                <path fill="#34A853" d="M448.7 248.2l-63.3-36.3-65.6 65.6 65.6 65.6 64-36.3c19.2-11 19.2-47.6-0.7-58.6z"/>
+              </svg>
+              <span class="play-text">
+                <span class="small">ÇOK YAKINDA</span>
+                <span class="big">Google Play</span>
+              </span>
+            </span>
+            <!-- Yayınlanınca: <a href="https://play.google.com/store/apps/details?id=com.mothenox.realisticdetective" target="_blank" rel="noopener" class="btn-play"> ... GOOGLE PLAY'DEN İndir </a> -->
           </div>
         </div>
 
@@ -681,6 +802,8 @@
 
       <div class="footer-links">
         <a href="https://huseyinmotuk.github.io/child-activities-website/" target="_blank" rel="noopener">Child Activities</a>
+        <a href="tileiq/">Tile-IQ</a>
+        <a href="realisticdetective/">Realistic Detective</a>
         <a href="https://github.com/huseyinmotuk" target="_blank" rel="noopener">GitHub</a>
         <a href="#apps">Uygulamalar</a>
         <a href="#about">Hakkımda</a>
