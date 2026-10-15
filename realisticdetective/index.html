@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Realistic Detective — Çevrimdışı Dedektif Oyunu</title>
+  <meta name="description" content="Realistic Detective: gerçekçi olay yerleri, şüpheli ifadeleri, telefon kayıtları ve ipuçlarıyla çevrimdışı dedektif oyunu. 11 dosya, 3 zorluk seviyesi, 5 dil.">
+  <meta name="theme-color" content="#050505">
+  <link rel="icon" type="image/png" href="../assets/realistic-detective-icon.png">
+  <link rel="apple-touch-icon" href="../assets/realistic-detective-icon.png">
+  <meta property="og:title" content="Realistic Detective — Faili bul, suçlamanı yap">
+  <meta property="og:description" content="İnternetsiz oynanan gerçekçi dedektif oyunu. Olay yerini incele, ifadeleri oku, ipuçlarını birleştir.">
+  <meta property="og:image" content="https://huseyinmotuk.github.io/assets/realistic-detective-icon.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://huseyinmotuk.github.io/realisticdetective/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #050505;
+      --bg-2: #0d0c0a;
+      --paper: #e9dfc7;
+      --paper-dark: #d6c8a6;
+      --ink: #231d14;
+      --amber: #d9a441;
+      --amber-dim: rgba(217, 164, 65, 0.16);
+      --blood: #9e1b1b;
+      --text: #efe9dc;
+      --text-dim: #a69f90;
+      --line: rgba(255, 255, 255, 0.08);
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg); color: var(--text); line-height: 1.6;
+      overflow-x: hidden; -webkit-font-smoothing: antialiased;
+    }
+    h1, h2, h3 { font-family: 'Playfair Display', Georgia, serif; line-height: 1.15; }
+    .type { font-family: 'Special Elite', 'Courier New', monospace; }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 1140px; margin: 0 auto; padding: 0 20px; }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(5, 5, 5, 0.85);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; }
+    .logo { display: flex; align-items: center; gap: 10px; font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.2rem; }
+    .logo img { width: 38px; height: 38px; border-radius: 10px; }
+    .nav-right { display: flex; align-items: center; gap: 10px; }
+    .nav-links { display: flex; gap: 22px; }
+    .nav-links a { color: var(--text-dim); font-weight: 600; font-size: 0.9rem; }
+    .nav-links a:hover { color: #fff; }
+    .lang-toggle {
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15);
+      color: #fff; font-weight: 700; font-size: 0.8rem; padding: 7px 12px; border-radius: 50px; cursor: pointer; font-family: inherit;
+    }
+
+    /* HERO */
+    .hero {
+      position: relative; overflow: hidden; padding: 84px 0 96px;
+      background:
+        radial-gradient(ellipse 60% 50% at 72% 40%, rgba(217, 164, 65, 0.14), transparent 70%),
+        radial-gradient(ellipse 50% 60% at 10% 90%, rgba(158, 27, 27, 0.12), transparent 70%),
+        var(--bg);
+    }
+    .hero::after {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background: repeating-linear-gradient(0deg, rgba(255,255,255,0.012) 0 2px, transparent 2px 4px);
+    }
+    .hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px; align-items: center; }
+    .stamp {
+      display: inline-block; font-family: 'Special Elite', monospace; color: var(--blood);
+      border: 2px solid var(--blood); padding: 4px 14px; border-radius: 4px; transform: rotate(-3deg);
+      font-size: 0.95rem; letter-spacing: 0.14em; margin-bottom: 22px; background: rgba(158,27,27,0.06);
+    }
+    .hero h1 { font-size: clamp(2.2rem, 5.2vw, 3.8rem); margin-bottom: 20px; }
+    .hero h1 em { font-style: normal; color: var(--amber); }
+    .hero p.lead { font-size: 1.12rem; color: var(--text-dim); margin-bottom: 30px; max-width: 520px; }
+    .hero-buttons { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+    .btn-play {
+      display: inline-flex; align-items: center; gap: 12px;
+      background: #000; border: 1px solid #333; color: #fff;
+      padding: 12px 22px; border-radius: 12px; position: relative;
+    }
+    .btn-play.soon { opacity: 0.55; cursor: not-allowed; }
+    .btn-play svg { width: 26px; height: 26px; flex-shrink: 0; }
+    .btn-play .t { display: flex; flex-direction: column; line-height: 1.1; }
+    .btn-play .t .s { font-size: 0.66rem; color: #bbb; letter-spacing: 0.04em; }
+    .btn-play .t .b { font-size: 1.05rem; font-weight: 700; }
+    .btn-ghost {
+      display: inline-flex; align-items: center; padding: 13px 22px; border-radius: 12px;
+      border: 1px solid rgba(217,164,65,0.4); color: var(--amber); font-weight: 600;
+    }
+    .btn-ghost:hover { background: var(--amber-dim); }
+    .facts { display: flex; gap: 22px; flex-wrap: wrap; margin-top: 30px; color: var(--text-dim); font-size: 0.9rem; font-weight: 600; }
+    .facts b { color: var(--amber); font-weight: 700; margin-right: 4px; }
+
+    .hero-visual { position: relative; display: flex; justify-content: center; }
+    .phone {
+      width: 280px; height: 570px; border-radius: 46px; padding: 12px;
+      background: linear-gradient(145deg, #262626, #0b0b0b);
+      box-shadow: 0 40px 90px rgba(0,0,0,0.7), 0 0 0 2px #2c2c2c, 0 0 80px rgba(217,164,65,0.08);
+      position: relative; z-index: 2;
+    }
+    .phone::before {
+      content: ''; position: absolute; top: 16px; left: 50%; transform: translateX(-50%);
+      width: 90px; height: 20px; background: #000; border-radius: 0 0 14px 14px; z-index: 3;
+    }
+    .screen {
+      width: 100%; height: 100%; border-radius: 36px; overflow: hidden; background: #020202;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 28px; text-align: center;
+    }
+    .screen img { width: 130px; height: 130px; object-fit: contain; margin-bottom: 20px; animation: bob 3.4s ease-in-out infinite; }
+    @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+    .screen .n { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 800; }
+    .screen .s { color: var(--text-dim); font-size: 0.88rem; font-weight: 600; margin-top: 6px; }
+    .screen .case-no { margin-top: 26px; color: var(--amber); font-size: 0.85rem; letter-spacing: 0.1em; }
+
+    .evidence {
+      position: absolute; z-index: 1; background: var(--paper); color: var(--ink);
+      font-family: 'Special Elite', monospace; font-size: 0.78rem; padding: 10px 12px; border-radius: 3px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.6); width: 150px; line-height: 1.35;
+    }
+    .evidence::before { content: ''; position: absolute; top: -6px; left: 50%; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; background: var(--blood); box-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+    .ev1 { top: 6%; left: -2%; transform: rotate(-8deg); }
+    .ev2 { bottom: 8%; right: -4%; transform: rotate(6deg); }
+
+    /* SECTIONS */
+    section { padding: 88px 0; position: relative; }
+    .head { text-align: center; max-width: 660px; margin: 0 auto 54px; }
+    .eyebrow { display: block; font-family: 'Special Elite', monospace; color: var(--amber); letter-spacing: 0.18em; text-transform: uppercase; font-size: 0.85rem; margin-bottom: 12px; }
+    .head h2 { font-size: clamp(1.9rem, 4vw, 2.7rem); margin-bottom: 14px; }
+    .head p { color: var(--text-dim); font-size: 1.04rem; }
+
+    /* STEPS */
+    .steps { background: var(--bg-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .step-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; counter-reset: step; }
+    .step {
+      background: linear-gradient(180deg, var(--paper) 0%, var(--paper-dark) 100%); color: var(--ink);
+      border-radius: 4px; padding: 30px 22px 24px; position: relative; box-shadow: var(--shadow);
+      transition: transform 0.25s;
+    }
+    .step:nth-child(odd) { transform: rotate(-1deg); }
+    .step:nth-child(even) { transform: rotate(1deg); }
+    .step:hover { transform: rotate(0) translateY(-6px); }
+    .step::before {
+      counter-increment: step; content: counter(step, decimal-leading-zero);
+      font-family: 'Special Elite', monospace; color: var(--blood); font-size: 1.6rem; display: block; margin-bottom: 8px;
+    }
+    .step .ic { position: absolute; top: 22px; right: 20px; font-size: 1.7rem; }
+    .step h3 { font-size: 1.2rem; margin-bottom: 8px; }
+    .step p { font-size: 0.92rem; color: #4d4331; }
+
+    /* CASES */
+    .levels { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+    .level { border: 1px solid var(--line); border-radius: 18px; padding: 26px 24px; background: rgba(255,255,255,0.02); }
+    .level-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+    .level h3 { font-size: 1.3rem; }
+    .pill { font-size: 0.75rem; font-weight: 700; padding: 4px 11px; border-radius: 50px; }
+    .lv-e .pill { background: rgba(74, 222, 128, 0.12); color: #4ade80; }
+    .lv-m .pill { background: var(--amber-dim); color: var(--amber); }
+    .lv-h .pill { background: rgba(220, 38, 38, 0.14); color: #f87171; }
+    .case-list { list-style: none; display: grid; gap: 10px; }
+    .case-list li {
+      display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-radius: 10px;
+      background: rgba(255,255,255,0.03); border: 1px solid var(--line);
+    }
+    .case-list .no { font-family: 'Special Elite', monospace; color: var(--text-dim); font-size: 0.78rem; flex-shrink: 0; }
+    .case-list .nm { font-weight: 600; }
+
+    /* FEATURES */
+    .feat-section { background: var(--bg-2); border-top: 1px solid var(--line); }
+    .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .feat { border: 1px solid var(--line); border-radius: 18px; padding: 26px 24px; background: rgba(255,255,255,0.02); transition: border-color 0.2s, transform 0.2s; }
+    .feat:hover { border-color: rgba(217,164,65,0.4); transform: translateY(-4px); }
+    .feat .ic { font-size: 1.7rem; width: 52px; height: 52px; border-radius: 12px; background: var(--amber-dim); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+    .feat h3 { font-size: 1.15rem; margin-bottom: 6px; }
+    .feat p { color: var(--text-dim); font-size: 0.93rem; }
+
+    /* CTA */
+    .cta { text-align: center; background: radial-gradient(ellipse at center, rgba(217,164,65,0.12), transparent 65%), var(--bg); }
+    .cta h2 { font-size: clamp(2rem, 4.4vw, 3rem); margin-bottom: 14px; }
+    .cta p { color: var(--text-dim); margin-bottom: 30px; font-size: 1.08rem; }
+    .cta .note { margin-top: 16px; font-size: 0.88rem; color: var(--text-dim); }
+
+    /* FOOTER */
+    footer { background: #000; padding: 44px 0 30px; border-top: 1px solid var(--line); text-align: center; color: var(--text-dim); }
+    .foot-links { display: flex; gap: 22px; justify-content: center; flex-wrap: wrap; margin-bottom: 18px; }
+    .foot-links a:hover { color: var(--amber); }
+    .foot-copy { font-size: 0.85rem; color: #6b665c; }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .reveal { opacity: 0; translate: 0 18px; transition: opacity 0.6s ease, translate 0.6s ease; }
+      .reveal.in { opacity: 1; translate: 0 0; }
+    }
+    @media (prefers-reduced-motion: reduce) { .screen img { animation: none; } }
+
+    @media (max-width: 960px) {
+      .step-grid { grid-template-columns: 1fr 1fr; }
+      .levels { grid-template-columns: 1fr 1fr; }
+      .levels .lv-h { grid-column: 1 / -1; }
+    }
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr; text-align: center; gap: 40px; }
+      .hero p.lead { margin-left: auto; margin-right: auto; }
+      .hero-buttons, .facts { justify-content: center; }
+      .hero-visual { order: -1; }
+      .phone { width: 240px; height: 490px; }
+      .screen img { width: 104px; height: 104px; }
+      .feat-grid { grid-template-columns: 1fr 1fr; }
+      .nav-links { display: none; }
+    }
+    @media (max-width: 640px) {
+      section { padding: 56px 0; }
+      .hero { padding: 32px 0 56px; }
+      .head { margin-bottom: 36px; }
+      .evidence { display: none; }
+      .step-grid { gap: 12px; }
+      .step { padding: 22px 14px 18px; }
+      .step .ic { top: 16px; right: 12px; font-size: 1.3rem; }
+      .step h3 { font-size: 1rem; }
+      .step p { font-size: 0.82rem; }
+      .levels { grid-template-columns: 1fr; }
+      .levels .lv-h { grid-column: auto; }
+      .feat-grid { gap: 12px; }
+      .feat { padding: 18px 14px; }
+      .feat .ic { width: 42px; height: 42px; font-size: 1.3rem; margin-bottom: 10px; }
+      .feat h3 { font-size: 1rem; }
+      .feat p { font-size: 0.84rem; }
+      .logo span { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="container nav-inner">
+      <a href="#" class="logo">
+        <img src="../assets/realistic-detective-icon.png" alt="Realistic Detective">
+        <span>Realistic Detective</span>
+      </a>
+      <div class="nav-right">
+        <div class="nav-links">
+          <a href="#how" data-i18n="nav_how">Nasıl oynanır</a>
+          <a href="#cases" data-i18n="nav_cases">Dosyalar</a>
+          <a href="#features" data-i18n="nav_features">Özellikler</a>
+        </div>
+        <button class="lang-toggle" id="langToggle" aria-label="Dil değiştir">EN</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="container hero-grid">
+      <div class="reveal">
+        <span class="stamp" data-i18n="stamp">YAKINDA</span>
+        <h1 data-i18n-html="hero_title">Her ipucu bir şey söyler.<br><em>Faili sen bul.</em></h1>
+        <p class="lead" data-i18n="hero_lead">Realistic Detective, gerçekçi olay yerleri, şüpheli ifadeleri, telefon kayıtları ve fiziksel kanıtlarla dolu çevrimdışı bir dedektif oyunu. Dosyayı aç, olay yerini incele, ipuçlarını birleştir ve suçlamanı yap. Tek şansın var.</p>
+        <div class="hero-buttons">
+          <span class="btn-play soon" aria-disabled="true" title="Yakında Google Play'de">
+            <svg viewBox="0 0 512 512" aria-hidden="true">
+              <path fill="#EA4335" d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1z"/>
+              <path fill="#FBBC04" d="M104.6 13c-1.4 0.5-12.6 6.5-12.6 25.2v435.6c0 18.7 11.2 24.7 12.6 25.2L325.3 277.7l-220.7-220.7z"/>
+              <path fill="#4285F4" d="M325.3 277.7L104.6 498.7 385.4 337.5l-60.1-60.1z"/>
+              <path fill="#34A853" d="M448.7 248.2l-63.3-36.3-65.6 65.6 65.6 65.6 64-36.3c19.2-11 19.2-47.6-0.7-58.6z"/>
+            </svg>
+            <span class="t"><span class="s" data-i18n="play_small">ÇOK YAKINDA</span><span class="b">Google Play</span></span>
+          </span>
+          <!-- Yayınlanınca yukarıdaki span yerine:
+          <a href="https://play.google.com/store/apps/details?id=com.mothenox.realisticdetective" target="_blank" rel="noopener" class="btn-play"> ... </a> -->
+          <a href="#how" class="btn-ghost" data-i18n="hero_more">Nasıl oynanır?</a>
+        </div>
+        <div class="facts">
+          <span><b>11</b><span data-i18n="fact_cases">dosya</span></span>
+          <span><b>3</b><span data-i18n="fact_levels">zorluk seviyesi</span></span>
+          <span><b>5</b><span data-i18n="fact_langs">dil</span></span>
+          <span data-i18n="fact_offline">İnternetsiz oynanır</span>
+        </div>
+      </div>
+
+      <div class="hero-visual reveal">
+        <div class="evidence ev1 type" data-i18n="ev1">KANIT #04 — Kahve fincanında ikinci bir parmak izi.</div>
+        <div class="evidence ev2 type" data-i18n="ev2">İFADE — "O gece evden hiç çıkmadım."</div>
+        <div class="phone">
+          <div class="screen">
+            <img src="../assets/realistic-detective-icon.png" alt="Realistic Detective ikonu">
+            <div class="n">Realistic Detective</div>
+            <div class="s">Investigate • Deduce • Accuse</div>
+            <div class="case-no type">CF-2026-H01</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- HOW -->
+  <section class="steps" id="how">
+    <div class="container">
+      <div class="head reveal">
+        <span class="eyebrow" data-i18n="how_eyebrow">Soruşturma</span>
+        <h2 data-i18n="how_title">Gerçek bir dedektif gibi çalış</h2>
+        <p data-i18n="how_sub">Her dosya baştan sona elle kurgulandı. Tahmin yok; her cevap kanıtlarda saklı.</p>
+      </div>
+      <div class="step-grid">
+        <div class="step reveal"><span class="ic">🔎</span><h3 data-i18n="s1_t">Olay yerini incele</h3><p data-i18n="s1_d">Her dosyada dört ayrı sahne. Yakınlaştır, şüpheli noktalara dokun, kanıtları topla.</p></div>
+        <div class="step reveal"><span class="ic">🗂️</span><h3 data-i18n="s2_t">İfadeleri oku</h3><p data-i18n="s2_d">Şüphelilerin anlattıklarını karşılaştır, çelişkileri yakala.</p></div>
+        <div class="step reveal"><span class="ic">📱</span><h3 data-i18n="s3_t">Kayıtları çöz</h3><p data-i18n="s3_d">Telefon kayıtları, mesajlar ve şifreli kasalar seni gerçeğe bir adım daha yaklaştırır.</p></div>
+        <div class="step reveal"><span class="ic">⚖️</span><h3 data-i18n="s4_t">Suçlamanı yap</h3><p data-i18n="s4_d">Faili ve rolleri belirle. Karar kesindir; sonuca göre dedektif rütbeni alırsın.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASES -->
+  <section id="cases">
+    <div class="container">
+      <div class="head reveal">
+        <span class="eyebrow" data-i18n="cases_eyebrow">Dosya arşivi</span>
+        <h2 data-i18n="cases_title">11 dosya, 3 zorluk seviyesi</h2>
+        <p data-i18n="cases_sub">Kolay dosyalarla ısın, zor dosyalarda tüm dikkatini topla.</p>
+      </div>
+      <div class="levels">
+        <div class="level lv-e reveal">
+          <div class="level-head"><h3 data-i18n="lv_e">Kolay</h3><span class="pill">4</span></div>
+          <ul class="case-list">
+            <li><span class="no">E01</span><span class="nm">Göldeki Ev</span></li>
+            <li><span class="no">E02</span><span class="nm">Son Antrenman</span></li>
+            <li><span class="no">E03</span><span class="nm">Pazar Kahvesi</span></li>
+            <li><span class="no">E04</span><span class="nm">Boş Park Yeri</span></li>
+          </ul>
+        </div>
+        <div class="level lv-m reveal">
+          <div class="level-head"><h3 data-i18n="lv_m">Orta</h3><span class="pill">4</span></div>
+          <ul class="case-list">
+            <li><span class="no">M01</span><span class="nm">Apartman Cinayeti</span></li>
+            <li><span class="no">M02</span><span class="nm">Kırmızı Işık</span></li>
+            <li><span class="no">M03</span><span class="nm">Son Tur</span></li>
+            <li><span class="no">M04</span><span class="nm">Şike Koşusu</span></li>
+          </ul>
+        </div>
+        <div class="level lv-h reveal">
+          <div class="level-head"><h3 data-i18n="lv_h">Zor</h3><span class="pill">3</span></div>
+          <ul class="case-list">
+            <li><span class="no">H01</span><span class="nm">Sahne Arkası</span></li>
+            <li><span class="no">H02</span><span class="nm">Sessiz Soygun</span></li>
+            <li><span class="no">H03</span><span class="nm">Kesik İp</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="feat-section" id="features">
+    <div class="container">
+      <div class="head reveal">
+        <span class="eyebrow" data-i18n="feat_eyebrow">Özellikler</span>
+        <h2 data-i18n="feat_title">Dosyanın içine gir</h2>
+      </div>
+      <div class="feat-grid">
+        <div class="feat reveal"><div class="ic">📴</div><h3 data-i18n="f1_t">Tamamen çevrimdışı</h3><p data-i18n="f1_d">İnternet olmadan da tüm dosyaları oynayabilirsin.</p></div>
+        <div class="feat reveal"><div class="ic">🏅</div><h3 data-i18n="f2_t">40 başarım</h3><p data-i18n="f2_d">Google Play Games başarımları ve bulut kayıt desteği.</p></div>
+        <div class="feat reveal"><div class="ic">🌍</div><h3 data-i18n="f3_t">5 dil</h3><p data-i18n="f3_d">Türkçe, İngilizce, Almanca, Fransızca ve İspanyolca.</p></div>
+        <div class="feat reveal"><div class="ic">💡</div><h3 data-i18n="f4_t">İpucu sistemi</h3><p data-i18n="f4_d">Takıldığında ipucu al, dosyayı sıfırlayıp yeniden dene.</p></div>
+        <div class="feat reveal"><div class="ic">🎧</div><h3 data-i18n="f5_t">Noir atmosfer</h3><p data-i18n="f5_d">Karanlık arayüz, ses efektleri ve fon müziği.</p></div>
+        <div class="feat reveal"><div class="ic">🎟️</div><h3 data-i18n="f6_t">Ücretsiz oyna</h3><p data-i18n="f6_d">Her kategorinin ilk dosyası açık. Tek seferlik satın almayla tüm reklamlar kalkar.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <div class="container reveal">
+      <span class="eyebrow" data-i18n="cta_eyebrow">Dosya hazırlanıyor</span>
+      <h2 data-i18n="cta_title">İlk dosyan masanda olacak.</h2>
+      <p data-i18n="cta_sub">Realistic Detective çok yakında Google Play'de.</p>
+      <span class="btn-play soon" aria-disabled="true">
+        <svg viewBox="0 0 512 512" aria-hidden="true">
+          <path fill="#EA4335" d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1z"/>
+          <path fill="#FBBC04" d="M104.6 13c-1.4 0.5-12.6 6.5-12.6 25.2v435.6c0 18.7 11.2 24.7 12.6 25.2L325.3 277.7l-220.7-220.7z"/>
+          <path fill="#4285F4" d="M325.3 277.7L104.6 498.7 385.4 337.5l-60.1-60.1z"/>
+          <path fill="#34A853" d="M448.7 248.2l-63.3-36.3-65.6 65.6 65.6 65.6 64-36.3c19.2-11 19.2-47.6-0.7-58.6z"/>
+        </svg>
+        <span class="t"><span class="s" data-i18n="play_small">ÇOK YAKINDA</span><span class="b">Google Play</span></span>
+      </span>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="foot-links">
+        <a href="https://huseyinmotuk.github.io/" data-i18n="foot_home">← MothenoX Uygulamaları</a>
+        <a href="privacy.html" data-i18n="foot_privacy">Gizlilik Politikası</a>
+        <a href="terms.html" data-i18n="foot_terms">Kullanım Koşulları</a>
+        <a href="mailto:mothenox46@gmail.com">mothenox46@gmail.com</a>
+      </div>
+      <div class="foot-copy">© <span id="year"></span> MothenoX · Hüseyin Motuk</div>
+    </div>
+  </footer>
+
+  <script>
+    const EN = {
+      nav_how: 'How to play', nav_cases: 'Case files', nav_features: 'Features',
+      stamp: 'COMING SOON',
+      hero_title: 'Every clue tells a story.<br><em>Find the culprit.</em>',
+      hero_lead: 'Realistic Detective is an offline detective game packed with realistic crime scenes, suspect statements, phone records and physical evidence. Open the file, search the scene, connect the clues and make your accusation. You only get one shot.',
+      play_small: 'COMING SOON', hero_more: 'How to play',
+      fact_cases: 'case files', fact_levels: 'difficulty levels', fact_langs: 'languages', fact_offline: 'Plays offline',
+      ev1: 'EVIDENCE #04 — A second fingerprint on the coffee cup.',
+      ev2: 'STATEMENT — "I never left the house that night."',
+      how_eyebrow: 'Investigation', how_title: 'Work like a real detective',
+      how_sub: 'Every case is hand-crafted from start to finish. No guessing — every answer is hidden in the evidence.',
+      s1_t: 'Search the scene', s1_d: 'Four separate scenes per case. Zoom in, tap suspicious spots, collect the evidence.',
+      s2_t: 'Read the statements', s2_d: 'Compare what the suspects say and catch the contradictions.',
+      s3_t: 'Crack the records', s3_d: 'Phone logs, messages and locked safes bring you one step closer to the truth.',
+      s4_t: 'Make your accusation', s4_d: 'Name the culprit and their role. The verdict is final — and earns you a detective rank.',
+      cases_eyebrow: 'Case archive', cases_title: '11 cases, 3 difficulty levels',
+      cases_sub: 'Warm up with easy files, then bring your full attention to the hard ones.',
+      lv_e: 'Easy', lv_m: 'Medium', lv_h: 'Hard',
+      feat_eyebrow: 'Features', feat_title: 'Step inside the file',
+      f1_t: 'Fully offline', f1_d: 'Play every case without an internet connection.',
+      f2_t: '40 achievements', f2_d: 'Google Play Games achievements and cloud save support.',
+      f3_t: '5 languages', f3_d: 'Turkish, English, German, French and Spanish.',
+      f4_t: 'Hint system', f4_d: 'Stuck? Get a hint, or reset the case and try again.',
+      f5_t: 'Noir atmosphere', f5_d: 'Dark interface, sound effects and background music.',
+      f6_t: 'Free to play', f6_d: 'The first case in each category is unlocked. A one-time purchase removes all ads.',
+      cta_eyebrow: 'File in progress', cta_title: 'Your first case will be on your desk soon.',
+      cta_sub: 'Realistic Detective is coming soon to Google Play.',
+      foot_home: '← MothenoX Apps', foot_privacy: 'Privacy Policy', foot_terms: 'Terms of Use'
+    };
+    const TR = {};
+    document.querySelectorAll('[data-i18n]').forEach(el => TR[el.dataset.i18n] = el.textContent);
+    document.querySelectorAll('[data-i18n-html]').forEach(el => TR[el.dataset.i18nHtml] = el.innerHTML);
+    const DICT = { tr: TR, en: EN };
+
+    function setLang(l) {
+      const d = DICT[l] || TR;
+      document.querySelectorAll('[data-i18n]').forEach(el => { if (d[el.dataset.i18n]) el.textContent = d[el.dataset.i18n]; });
+      document.querySelectorAll('[data-i18n-html]').forEach(el => { if (d[el.dataset.i18nHtml]) el.innerHTML = d[el.dataset.i18nHtml]; });
+      document.documentElement.lang = l;
+      document.getElementById('langToggle').textContent = l === 'tr' ? 'EN' : 'TR';
+      try { localStorage.setItem('mx_lang', l); } catch (e) {}
+    }
+    let lang = 'tr';
+    try { lang = localStorage.getItem('mx_lang') || ((navigator.language || '').toLowerCase().startsWith('tr') ? 'tr' : 'en'); } catch (e) {}
+    setLang(lang);
+    document.getElementById('langToggle').addEventListener('click', () => { lang = lang === 'tr' ? 'en' : 'tr'; setLang(lang); });
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.12 });
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    } else {
+      document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+    }
+  </script>
+</body>
+</html>
