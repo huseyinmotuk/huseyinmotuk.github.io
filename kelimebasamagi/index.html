@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kelime Basamağı — Türkçe Kelime Türetme Oyunu</title>
+  <meta name="description" content="Kelime Basamağı: harf ekle, harf çıkar, harf değiştir; her kelimeden yeni bir kelime türet. İnternetsiz tekli oyun, Kolay / Orta / Zor seviyeler.">
+  <meta name="theme-color" content="#1E2A4A">
+  <link rel="icon" type="image/png" href="../assets/kelime-basamagi-icon.png">
+  <link rel="apple-touch-icon" href="../assets/kelime-basamagi-icon.png">
+  <meta property="og:title" content="Kelime Basamağı — Kelimeden kelimeye tırman">
+  <meta property="og:description" content="Harf ekle, çıkar ya da değiştir; her kelime yeni bir basamak. İnternetsiz oynanan Türkçe kelime oyunu.">
+  <meta property="og:image" content="https://huseyinmotuk.github.io/assets/kelime-basamagi-icon.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://huseyinmotuk.github.io/kelimebasamagi/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --navy: #1E2A4A; --navy-2: #2A385C; --navy-deep: #141B2E;
+      --cream: #FBF7EF; --orange: #F2A541;
+      --add: #2E8B57; --remove: #C0392B; --change: #F4C430;
+      --text: #FBF7EF; --text-dim: #AEB8CF; --line: rgba(255,255,255,0.09);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+    body { font-family: 'Nunito Sans', -apple-system, sans-serif; background: var(--navy-deep); color: var(--text); line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    h1, h2, h3, .logo, .tile { font-family: 'Nunito', sans-serif; }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(20,27,46,0.88); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 1.15rem; }
+    .logo img { width: 36px; height: 36px; border-radius: 9px; }
+    .nav-right { display: flex; align-items: center; gap: 18px; }
+    .nav-links { display: flex; gap: 20px; }
+    .nav-links a { color: var(--text-dim); font-weight: 700; font-size: 0.9rem; }
+    .nav-links a:hover { color: #fff; }
+    .lang-toggle { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.18); color: #fff; font-weight: 800; font-size: 0.8rem; padding: 7px 12px; border-radius: 50px; cursor: pointer; font-family: inherit; }
+
+    /* HERO */
+    .hero { padding: 72px 0 84px; background: radial-gradient(ellipse 60% 55% at 70% 40%, rgba(242,165,65,0.16), transparent 70%), var(--navy-deep); }
+    .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px; align-items: center; }
+    .badge { display: inline-block; background: rgba(242,165,65,0.14); color: var(--orange); font-weight: 800; font-size: 0.8rem; letter-spacing: 0.14em; padding: 6px 14px; border-radius: 50px; margin-bottom: 20px; }
+    .hero h1 { font-size: clamp(2.2rem, 5.4vw, 3.8rem); line-height: 1.08; font-weight: 900; margin-bottom: 18px; }
+    .hero h1 em { font-style: normal; color: var(--orange); }
+    .hero p.lead { font-size: 1.1rem; color: var(--text-dim); margin-bottom: 28px; max-width: 520px; }
+    .hero-buttons { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .btn-play { display: inline-flex; align-items: center; gap: 12px; background: #000; border: 1px solid #333; color: #fff; padding: 12px 22px; border-radius: 12px; }
+    .btn-play.soon { opacity: 0.55; cursor: not-allowed; }
+    .btn-play svg { width: 26px; height: 26px; flex-shrink: 0; }
+    .btn-play .t { display: flex; flex-direction: column; line-height: 1.1; }
+    .btn-play .t .s { font-size: 0.66rem; color: #bbb; letter-spacing: 0.04em; }
+    .btn-play .t .b { font-size: 1.05rem; font-weight: 700; }
+    .btn-ghost { display: inline-flex; align-items: center; padding: 13px 22px; border-radius: 12px; border: 1px solid rgba(242,165,65,0.45); color: var(--orange); font-weight: 800; }
+    .btn-ghost:hover { background: rgba(242,165,65,0.1); }
+    .facts { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 28px; color: var(--text-dim); font-size: 0.92rem; font-weight: 700; }
+    .facts b { color: var(--orange); margin-right: 4px; }
+
+    /* Ladder demo */
+    .ladder { display: flex; flex-direction: column; gap: 14px; align-items: center; }
+    .rung { display: flex; align-items: center; gap: 14px; }
+    .word { display: flex; gap: 6px; }
+    .tile { width: 52px; height: 52px; border-radius: 10px; background: var(--cream); color: var(--navy); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.6rem; box-shadow: 0 3px 0 rgba(0,0,0,0.35); }
+    .tile.hi { background: var(--orange); }
+    .op { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.06em; padding: 4px 10px; border-radius: 50px; white-space: nowrap; min-width: 92px; text-align: center; }
+    .op.add { background: rgba(46,139,87,0.2); color: #58D68D; }
+    .op.rem { background: rgba(192,57,43,0.22); color: #F1948A; }
+    .op.chg { background: rgba(244,196,48,0.18); color: var(--change); }
+    .op.none { visibility: hidden; }
+    @media (prefers-reduced-motion: no-preference) {
+      .rung { animation: rise 0.6s ease both; }
+      .rung:nth-child(2) { animation-delay: 0.15s; } .rung:nth-child(3) { animation-delay: 0.3s; }
+      .rung:nth-child(4) { animation-delay: 0.45s; } .rung:nth-child(5) { animation-delay: 0.6s; }
+      @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+    }
+
+    section { padding: 80px 0; }
+    .head { text-align: center; max-width: 660px; margin: 0 auto 48px; }
+    .eyebrow { display: block; color: var(--orange); letter-spacing: 0.16em; text-transform: uppercase; font-size: 0.82rem; font-weight: 800; margin-bottom: 10px; }
+    .head h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 900; margin-bottom: 12px; }
+    .head p { color: var(--text-dim); }
+
+    .alt { background: var(--navy); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .card { border: 1px solid var(--line); border-radius: 18px; padding: 24px 22px; background: rgba(255,255,255,0.03); }
+    .card .ic { font-size: 1.6rem; width: 50px; height: 50px; border-radius: 12px; background: rgba(242,165,65,0.14); display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
+    .card h3 { font-size: 1.15rem; font-weight: 800; margin-bottom: 6px; }
+    .card p { color: var(--text-dim); font-size: 0.94rem; }
+    .lv-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .pill { font-size: 0.75rem; font-weight: 800; padding: 4px 11px; border-radius: 50px; }
+    .lv-e .pill { background: rgba(46,139,87,0.2); color: #58D68D; }
+    .lv-m .pill { background: rgba(242,165,65,0.16); color: var(--orange); }
+    .lv-h .pill { background: rgba(192,57,43,0.22); color: #F1948A; }
+
+    .cta { text-align: center; background: radial-gradient(ellipse at center, rgba(242,165,65,0.13), transparent 65%), var(--navy-deep); }
+    .cta h2 { font-size: clamp(1.9rem, 4.4vw, 2.8rem); font-weight: 900; margin-bottom: 12px; }
+    .cta p { color: var(--text-dim); margin-bottom: 26px; }
+
+    footer { background: #0d1220; padding: 40px 0 28px; border-top: 1px solid var(--line); text-align: center; color: var(--text-dim); }
+    .foot-links { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px; }
+    .foot-links a:hover { color: var(--orange); }
+    .foot-copy { font-size: 0.85rem; color: #6b7590; }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .reveal { opacity: 0; translate: 0 18px; transition: opacity 0.6s ease, translate 0.6s ease; }
+      .reveal.in { opacity: 1; translate: 0 0; }
+    }
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr; text-align: center; gap: 40px; }
+      .hero p.lead { margin-left: auto; margin-right: auto; }
+      .hero-buttons, .facts { justify-content: center; }
+      .grid3 { grid-template-columns: 1fr 1fr; }
+      .nav-links { display: none; }
+    }
+    @media (max-width: 600px) {
+      section { padding: 56px 0; }
+      .hero { padding: 40px 0 56px; }
+      .grid3 { grid-template-columns: 1fr; }
+      .tile { width: 40px; height: 40px; font-size: 1.25rem; border-radius: 8px; }
+      .word { gap: 4px; }
+      .rung { gap: 8px; }
+      .op { min-width: 78px; font-size: 0.64rem; padding: 4px 6px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="container nav-inner">
+      <a href="#" class="logo">
+        <img src="../assets/kelime-basamagi-icon.png" alt="Kelime Basamağı">
+        <span>Kelime Basamağı</span>
+      </a>
+      <div class="nav-right">
+        <div class="nav-links">
+          <a href="#how" data-i18n="nav_how">Nasıl oynanır</a>
+          <a href="#levels" data-i18n="nav_levels">Seviyeler</a>
+          <a href="#features" data-i18n="nav_features">Özellikler</a>
+        </div>
+        <button class="lang-toggle" id="langToggle" aria-label="Dil değiştir">EN</button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container hero-grid">
+      <div class="reveal">
+        <span class="badge" data-i18n="badge">YAKINDA</span>
+        <h1 data-i18n-html="hero_title">Kelimeden kelimeye<br><em>basamak basamak</em> tırman.</h1>
+        <p class="lead" data-i18n="hero_lead">Ekrandaki kelimeden yeni bir kelime türet: bir harf ekle, bir harf çıkar ya da harf değiştir. Bulduğun her kelime yeni bir basamak olur. Süre dolmadan cevabı bul, canlarını koru, rekorunu geç.</p>
+        <div class="hero-buttons">
+          <span class="btn-play soon" aria-disabled="true" title="Yakında Google Play'de">
+            <svg viewBox="0 0 512 512" aria-hidden="true">
+              <path fill="#EA4335" d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1z"/>
+              <path fill="#FBBC04" d="M104.6 13c-1.4 0.5-12.6 6.5-12.6 25.2v435.6c0 18.7 11.2 24.7 12.6 25.2L325.3 277.7l-220.7-220.7z"/>
+              <path fill="#4285F4" d="M325.3 277.7L104.6 498.7 385.4 337.5l-60.1-60.1z"/>
+              <path fill="#34A853" d="M448.7 248.2l-63.3-36.3-65.6 65.6 65.6 65.6 64-36.3c19.2-11 19.2-47.6-0.7-58.6z"/>
+            </svg>
+            <span class="t"><span class="s" data-i18n="play_small">ÇOK YAKINDA</span><span class="b">Google Play</span></span>
+          </span>
+          <!-- Yayınlanınca yukarıdaki span yerine:
+          <a href="https://play.google.com/store/apps/details?id=com.mothenox.kelimebasamagi" target="_blank" rel="noopener" class="btn-play"> ... </a> -->
+          <a href="#how" class="btn-ghost" data-i18n="hero_more">Nasıl oynanır?</a>
+        </div>
+        <div class="facts">
+          <span><b>28.000+</b><span data-i18n="fact_words">kelime</span></span>
+          <span><b>3</b><span data-i18n="fact_levels">seviye</span></span>
+          <span data-i18n="fact_offline">İnternetsiz oynanır</span>
+        </div>
+      </div>
+
+      <div class="ladder reveal" aria-label="Örnek zincir: OT, OBA, ODA, ODAK, OVA">
+        <div class="rung"><span class="op none">—</span><div class="word"><span class="tile">O</span><span class="tile">T</span></div></div>
+        <div class="rung"><span class="op add" data-i18n="op_addchg">EKLE + DEĞİŞTİR</span><div class="word"><span class="tile">O</span><span class="tile hi">B</span><span class="tile hi">A</span></div></div>
+        <div class="rung"><span class="op chg" data-i18n="op_chg">DEĞİŞTİR</span><div class="word"><span class="tile">O</span><span class="tile hi">D</span><span class="tile">A</span></div></div>
+        <div class="rung"><span class="op add" data-i18n="op_add">EKLE</span><div class="word"><span class="tile">O</span><span class="tile">D</span><span class="tile">A</span><span class="tile hi">K</span></div></div>
+        <div class="rung"><span class="op rem" data-i18n="op_remchg">ÇIKAR + DEĞİŞTİR</span><div class="word"><span class="tile">O</span><span class="tile hi">V</span><span class="tile">A</span></div></div>
+      </div>
+    </div>
+  </header>
+
+  <section class="alt" id="how">
+    <div class="container">
+      <div class="head reveal">
+        <span class="eyebrow" data-i18n="how_eyebrow">Nasıl oynanır</span>
+        <h2 data-i18n="how_title">Her hamlede tek bir işlem</h2>
+        <p data-i18n="how_sub">İşlemi oyun belirler; sen kelimeyi bulursun. Kutular dolunca kelime kendiliğinden kontrol edilir.</p>
+      </div>
+      <div class="grid3">
+        <div class="card reveal"><div class="ic">➕</div><h3 data-i18n="h1_t">Harf ekle</h3><p data-i18n="h1_d">Başa, ortaya ya da sona bir harf ekle. KAR → KARE.</p></div>
+        <div class="card reveal"><div class="ic">➖</div><h3 data-i18n="h2_t">Harf çıkar</h3><p data-i18n="h2_d">İstediğin harfi sil. ODAK → ODA.</p></div>
+        <div class="card reveal"><div class="ic">🔁</div><h3 data-i18n="h3_t">Harf değiştir</h3><p data-i18n="h3_d">Bir ya da daha fazla harfi değiştir. ODA → OVA. Birleşik işlemlerde önce ekle/çıkar, sonra değiştir.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="levels">
+    <div class="container">
+      <div class="head reveal">
+        <span class="eyebrow" data-i18n="lv_eyebrow">Seviyeler</span>
+        <h2 data-i18n="lv_title">Kolay, Orta, Zor</h2>
+        <p data-i18n="lv_sub">Her seviyede tüm işlemler karışık gelir. Kelime uzadıkça iş zorlaşır.</p>
+      </div>
+      <div class="grid3">
+        <div class="card lv-e reveal"><div class="lv-head"><h3 data-i18n="lv_e">Kolay</h3><span class="pill">2-3-4</span></div><p data-i18n="lv_e_d">2 ile 4 harf arası kelimeler, tur başına 15 saniye. Isınmak için ideal.</p></div>
+        <div class="card lv-m reveal"><div class="lv-head"><h3 data-i18n="lv_m">Orta</h3><span class="pill">4-5-6</span></div><p data-i18n="lv_m_d">4 ile 6 harf arası kelimeler, tur başına 20 saniye. Bir hamlede 2 harfe kadar değişir.</p></div>
+        <div class="card lv-h reveal"><div class="lv-head"><h3 data-i18n="lv_h">Zor</h3><span class="pill">6-7-8</span></div><p data-i18n="lv_h_d">6 ile 8 harf arası kelimeler, tur başına 25 saniye. Bir hamlede 3 harfe kadar değişir.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt" id="features">
+    <div class="container">
+      <div class="head reveal">
+        <span class="eyebrow" data-i18n="f_eyebrow">Özellikler</span>
+        <h2 data-i18n="f_title">Kelime dağarcığını büyüt</h2>
+      </div>
+      <div class="grid3">
+        <div class="card reveal"><div class="ic">📴</div><h3 data-i18n="f1_t">İnternetsiz oyna</h3><p data-i18n="f1_d">Tekli oyun internet olmadan da oynanır.</p></div>
+        <div class="card reveal"><div class="ic">📚</div><h3 data-i18n="f2_t">28.000+ kelime</h3><p data-i18n="f2_d">TDK imla kılavuzu madde başlarından derlenen liste. Argo ve küfür kabul edilmez.</p></div>
+        <div class="card reveal"><div class="ic">💡</div><h3 data-i18n="f3_t">İpucu ve süre dondurma</h3><p data-i18n="f3_d">Takıldığında ipucu al ya da süreyi 10 saniye dondur.</p></div>
+        <div class="card reveal"><div class="ic">⌨️</div><h3 data-i18n="f4_t">Kendi Türkçe klavyesi</h3><p data-i18n="f4_d">Türkçe Q ya da F düzeni, ayarlanabilir tuş boyu. Otomatik düzeltme yok.</p></div>
+        <div class="card reveal"><div class="ic">🏆</div><h3 data-i18n="f5_t">Rekorlar ve keşifler</h3><p data-i18n="f5_d">Her seviyede en iyi skor, tüm zamanlar toplam puanı ve keşfettiğin farklı kelime sayısı.</p></div>
+        <div class="card reveal"><div class="ic">🌐</div><h3 data-i18n="f6_t">Online masalar (yakında)</h3><p data-i18n="f6_d">2 ya da 4 kişilik masalarda arkadaşlarınla aynı sorularla yarış.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="container reveal">
+      <span class="eyebrow" data-i18n="cta_eyebrow">Basamaklar hazırlanıyor</span>
+      <h2 data-i18n="cta_title">İlk kelimen yakında ekranında.</h2>
+      <p data-i18n="cta_sub">Kelime Basamağı çok yakında Google Play'de.</p>
+      <span class="btn-play soon" aria-disabled="true">
+        <svg viewBox="0 0 512 512" aria-hidden="true">
+          <path fill="#EA4335" d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1z"/>
+          <path fill="#FBBC04" d="M104.6 13c-1.4 0.5-12.6 6.5-12.6 25.2v435.6c0 18.7 11.2 24.7 12.6 25.2L325.3 277.7l-220.7-220.7z"/>
+          <path fill="#4285F4" d="M325.3 277.7L104.6 498.7 385.4 337.5l-60.1-60.1z"/>
+          <path fill="#34A853" d="M448.7 248.2l-63.3-36.3-65.6 65.6 65.6 65.6 64-36.3c19.2-11 19.2-47.6-0.7-58.6z"/>
+        </svg>
+        <span class="t"><span class="s" data-i18n="play_small">ÇOK YAKINDA</span><span class="b">Google Play</span></span>
+      </span>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="foot-links">
+        <a href="https://huseyinmotuk.github.io/" data-i18n="foot_home">← MothenoX Uygulamaları</a>
+        <a href="https://huseyinmotuk.github.io/kelime-basamagi-legal/privacy-policy.html" data-i18n="foot_privacy">Gizlilik Politikası</a>
+        <a href="https://huseyinmotuk.github.io/kelime-basamagi-legal/terms.html" data-i18n="foot_terms">Kullanım Koşulları</a>
+        <a href="https://huseyinmotuk.github.io/kelime-basamagi-legal/support.html" data-i18n="foot_support">Destek</a>
+        <a href="mailto:mothenox46@gmail.com">mothenox46@gmail.com</a>
+      </div>
+      <div class="foot-copy">© <span id="year"></span> MothenoX · Hüseyin Motuk</div>
+    </div>
+  </footer>
+
+  <script>
+    const EN = {
+      nav_how: 'How to play', nav_levels: 'Levels', nav_features: 'Features',
+      badge: 'COMING SOON',
+      hero_title: 'Climb from word to word,<br><em>one rung at a time.</em>',
+      hero_lead: 'A Turkish word game: build a new word from the one on screen by adding a letter, removing a letter or changing letters. Every word you find becomes a new rung. Beat the clock, keep your lives, break your record.',
+      play_small: 'COMING SOON', hero_more: 'How to play',
+      fact_words: 'words', fact_levels: 'levels', fact_offline: 'Plays offline',
+      op_addchg: 'ADD + CHANGE', op_chg: 'CHANGE', op_add: 'ADD', op_remchg: 'REMOVE + CHANGE',
+      how_eyebrow: 'How to play', how_title: 'One operation per move',
+      how_sub: 'The game picks the operation; you find the word. When the boxes are full, the word is checked automatically.',
+      h1_t: 'Add a letter', h1_d: 'Add a letter at the start, middle or end. KAR → KARE.',
+      h2_t: 'Remove a letter', h2_d: 'Delete any letter. ODAK → ODA.',
+      h3_t: 'Change letters', h3_d: 'Change one or more letters. ODA → OVA. In combined moves, add/remove first, then change.',
+      lv_eyebrow: 'Levels', lv_title: 'Easy, Medium, Hard',
+      lv_sub: 'All operations are mixed at every level. Longer words make it harder.',
+      lv_e: 'Easy', lv_m: 'Medium', lv_h: 'Hard',
+      lv_e_d: 'Words of 2 to 4 letters, 15 seconds per turn. Perfect for warming up.',
+      lv_m_d: 'Words of 4 to 6 letters, 20 seconds per turn. Up to 2 letters change per move.',
+      lv_h_d: 'Words of 6 to 8 letters, 25 seconds per turn. Up to 3 letters change per move.',
+      f_eyebrow: 'Features', f_title: 'Grow your vocabulary',
+      f1_t: 'Play offline', f1_d: 'Single-player works without an internet connection.',
+      f2_t: '28,000+ words', f2_d: 'Compiled from the Turkish Language Association spelling guide. No slang or profanity.',
+      f3_t: 'Hints and time freeze', f3_d: 'Stuck? Get a hint or freeze the clock for 10 seconds.',
+      f4_t: 'Built-in Turkish keyboard', f4_d: 'Turkish Q or F layout, adjustable key size. No autocorrect.',
+      f5_t: 'Records and discoveries', f5_d: 'Best score per level, all-time total points and the number of different words you discovered.',
+      f6_t: 'Online tables (soon)', f6_d: 'Race your friends on the same questions at 2- or 4-player tables.',
+      cta_eyebrow: 'Building the ladder', cta_title: 'Your first word is coming soon.',
+      cta_sub: 'Kelime Basamağı is coming soon to Google Play.',
+      foot_home: '← MothenoX Apps', foot_privacy: 'Privacy Policy', foot_terms: 'Terms of Use', foot_support: 'Support'
+    };
+    const TR = {};
+    document.querySelectorAll('[data-i18n]').forEach(el => TR[el.dataset.i18n] = el.textContent);
+    document.querySelectorAll('[data-i18n-html]').forEach(el => TR[el.dataset.i18nHtml] = el.innerHTML);
+    const DICT = { tr: TR, en: EN };
+
+    function setLang(l) {
+      const d = DICT[l] || TR;
+      document.querySelectorAll('[data-i18n]').forEach(el => { if (d[el.dataset.i18n]) el.textContent = d[el.dataset.i18n]; });
+      document.querySelectorAll('[data-i18n-html]').forEach(el => { if (d[el.dataset.i18nHtml]) el.innerHTML = d[el.dataset.i18nHtml]; });
+      document.documentElement.lang = l;
+      document.getElementById('langToggle').textContent = l === 'tr' ? 'EN' : 'TR';
+      try { localStorage.setItem('mx_lang', l); } catch (e) {}
+    }
+    let lang = 'tr';
+    try { lang = localStorage.getItem('mx_lang') || ((navigator.language || '').toLowerCase().startsWith('tr') ? 'tr' : 'en'); } catch (e) {}
+    setLang(lang);
+    document.getElementById('langToggle').addEventListener('click', () => { lang = lang === 'tr' ? 'en' : 'tr'; setLang(lang); });
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.12 });
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    } else {
+      document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+    }
+  </script>
+</body>
+</html>
