@@ -56,6 +56,9 @@
     .btn-play .t { display: flex; flex-direction: column; line-height: 1.1; }
     .btn-play .t .s { font-size: 0.66rem; color: #bbb; letter-spacing: 0.04em; }
     .btn-play .t .b { font-size: 1.05rem; font-weight: 700; }
+    .btn-play.primary-store { background: var(--orange); border-color: var(--orange); color: var(--navy); }
+    .btn-play.primary-store .t .s { color: #3b2a10; }
+    .btn-play.primary-store svg path[data-mono] { fill: var(--navy); }
     .btn-ghost { display: inline-flex; align-items: center; padding: 13px 22px; border-radius: 12px; border: 1px solid rgba(242,165,65,0.45); color: var(--orange); font-weight: 800; }
     .btn-ghost:hover { background: rgba(242,165,65,0.1); }
     .facts { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 28px; color: var(--text-dim); font-size: 0.92rem; font-weight: 700; }
@@ -125,6 +128,8 @@
       .word { gap: 4px; }
       .rung { gap: 8px; }
       .op { min-width: 78px; font-size: 0.64rem; padding: 4px 6px; }
+      .hero-buttons { flex-direction: column; align-items: stretch; max-width: 320px; margin: 0 auto; }
+      .hero-buttons .btn-play, .hero-buttons .btn-ghost { justify-content: center; }
     }
   </style>
 </head>
@@ -150,21 +155,23 @@
   <header class="hero">
     <div class="container hero-grid">
       <div class="reveal">
-        <span class="badge" data-i18n="badge">YAKINDA</span>
+        <span class="badge" data-i18n="badge">YAYINDA · ÜCRETSİZ</span>
         <h1 data-i18n-html="hero_title">Kelimeden kelimeye<br><em>basamak basamak</em> tırman.</h1>
         <p class="lead" data-i18n="hero_lead">Ekrandaki kelimeden yeni bir kelime türet: bir harf ekle, bir harf çıkar ya da harf değiştir. Bulduğun her kelime yeni bir basamak olur. Süre dolmadan cevabı bul, canlarını koru, rekorunu geç.</p>
         <div class="hero-buttons">
-          <span class="btn-play soon" aria-disabled="true" title="Yakında Google Play'de">
+          <a href="https://play.google.com/store/apps/details?id=com.mothenox.kelimebasamagi" target="_blank" rel="noopener" class="btn-play" data-store="android" aria-label="Google Play">
             <svg viewBox="0 0 512 512" aria-hidden="true">
               <path fill="#EA4335" d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1z"/>
               <path fill="#FBBC04" d="M104.6 13c-1.4 0.5-12.6 6.5-12.6 25.2v435.6c0 18.7 11.2 24.7 12.6 25.2L325.3 277.7l-220.7-220.7z"/>
               <path fill="#4285F4" d="M325.3 277.7L104.6 498.7 385.4 337.5l-60.1-60.1z"/>
               <path fill="#34A853" d="M448.7 248.2l-63.3-36.3-65.6 65.6 65.6 65.6 64-36.3c19.2-11 19.2-47.6-0.7-58.6z"/>
             </svg>
-            <span class="t"><span class="s" data-i18n="play_small">ÇOK YAKINDA</span><span class="b">Google Play</span></span>
-          </span>
-          <!-- Yayınlanınca yukarıdaki span yerine:
-          <a href="https://play.google.com/store/apps/details?id=com.mothenox.kelimebasamagi" target="_blank" rel="noopener" class="btn-play"> ... </a> -->
+            <span class="t"><span class="s" data-i18n="play_small">GOOGLE PLAY'DEN</span><span class="b" data-i18n="play_big">İndir</span></span>
+          </a>
+          <a href="https://apps.apple.com/tr/app/kelime-basama%C4%9F%C4%B1/id6826619515?l=tr" target="_blank" rel="noopener" class="btn-play" data-store="ios" aria-label="App Store">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path data-mono fill="#fff" d="M16.37 12.79c-.03-2.86 2.34-4.24 2.45-4.31-1.34-1.95-3.42-2.22-4.16-2.25-1.77-.18-3.46 1.04-4.36 1.04-.9 0-2.28-1.02-3.75-.99-1.93.03-3.71 1.12-4.7 2.85-2.01 3.48-.51 8.62 1.44 11.44.96 1.38 2.1 2.93 3.6 2.88 1.44-.06 1.99-.93 3.73-.93 1.74 0 2.23.93 3.75.9 1.55-.03 2.53-1.4 3.48-2.79 1.1-1.6 1.55-3.15 1.57-3.23-.03-.01-3.02-1.16-3.05-4.61zM13.5 4.38c.79-.96 1.33-2.3 1.18-3.63-1.14.05-2.53.76-3.35 1.72-.73.85-1.37 2.21-1.2 3.52 1.27.1 2.57-.65 3.37-1.61z"/></svg>
+            <span class="t"><span class="s" data-i18n="as_small">APP STORE'DAN</span><span class="b" data-i18n="as_big">İndir</span></span>
+          </a>
           <a href="#how" class="btn-ghost" data-i18n="hero_more">Nasıl oynanır?</a>
         </div>
         <div class="facts">
@@ -233,18 +240,24 @@
 
   <section class="cta">
     <div class="container reveal">
-      <span class="eyebrow" data-i18n="cta_eyebrow">Basamaklar hazırlanıyor</span>
-      <h2 data-i18n="cta_title">İlk kelimen yakında ekranında.</h2>
-      <p data-i18n="cta_sub">Kelime Basamağı çok yakında Google Play'de.</p>
-      <span class="btn-play soon" aria-disabled="true">
-        <svg viewBox="0 0 512 512" aria-hidden="true">
-          <path fill="#EA4335" d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1z"/>
-          <path fill="#FBBC04" d="M104.6 13c-1.4 0.5-12.6 6.5-12.6 25.2v435.6c0 18.7 11.2 24.7 12.6 25.2L325.3 277.7l-220.7-220.7z"/>
-          <path fill="#4285F4" d="M325.3 277.7L104.6 498.7 385.4 337.5l-60.1-60.1z"/>
-          <path fill="#34A853" d="M448.7 248.2l-63.3-36.3-65.6 65.6 65.6 65.6 64-36.3c19.2-11 19.2-47.6-0.7-58.6z"/>
-        </svg>
-        <span class="t"><span class="s" data-i18n="play_small">ÇOK YAKINDA</span><span class="b">Google Play</span></span>
-      </span>
+      <span class="eyebrow" data-i18n="cta_eyebrow">Basamaklar hazır</span>
+      <h2 data-i18n="cta_title">İlk basamak seni bekliyor.</h2>
+      <p data-i18n="cta_sub">Kelime Basamağı Google Play ve App Store'da ücretsiz.</p>
+      <div class="hero-buttons" style="justify-content:center">
+      <a href="https://play.google.com/store/apps/details?id=com.mothenox.kelimebasamagi" target="_blank" rel="noopener" class="btn-play" data-store="android" aria-label="Google Play">
+          <svg viewBox="0 0 512 512" aria-hidden="true">
+            <path fill="#EA4335" d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1z"/>
+            <path fill="#FBBC04" d="M104.6 13c-1.4 0.5-12.6 6.5-12.6 25.2v435.6c0 18.7 11.2 24.7 12.6 25.2L325.3 277.7l-220.7-220.7z"/>
+            <path fill="#4285F4" d="M325.3 277.7L104.6 498.7 385.4 337.5l-60.1-60.1z"/>
+            <path fill="#34A853" d="M448.7 248.2l-63.3-36.3-65.6 65.6 65.6 65.6 64-36.3c19.2-11 19.2-47.6-0.7-58.6z"/>
+          </svg>
+          <span class="t"><span class="s" data-i18n="play_small">GOOGLE PLAY'DEN</span><span class="b" data-i18n="play_big">İndir</span></span>
+        </a>
+      <a href="https://apps.apple.com/tr/app/kelime-basama%C4%9F%C4%B1/id6826619515?l=tr" target="_blank" rel="noopener" class="btn-play" data-store="ios" aria-label="App Store">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path data-mono fill="#fff" d="M16.37 12.79c-.03-2.86 2.34-4.24 2.45-4.31-1.34-1.95-3.42-2.22-4.16-2.25-1.77-.18-3.46 1.04-4.36 1.04-.9 0-2.28-1.02-3.75-.99-1.93.03-3.71 1.12-4.7 2.85-2.01 3.48-.51 8.62 1.44 11.44.96 1.38 2.1 2.93 3.6 2.88 1.44-.06 1.99-.93 3.73-.93 1.74 0 2.23.93 3.75.9 1.55-.03 2.53-1.4 3.48-2.79 1.1-1.6 1.55-3.15 1.57-3.23-.03-.01-3.02-1.16-3.05-4.61zM13.5 4.38c.79-.96 1.33-2.3 1.18-3.63-1.14.05-2.53.76-3.35 1.72-.73.85-1.37 2.21-1.2 3.52 1.27.1 2.57-.65 3.37-1.61z"/></svg>
+          <span class="t"><span class="s" data-i18n="as_small">APP STORE'DAN</span><span class="b" data-i18n="as_big">İndir</span></span>
+        </a>
+      </div>
     </div>
   </section>
 
@@ -264,10 +277,11 @@
   <script>
     const EN = {
       nav_how: 'How to play', nav_levels: 'Levels', nav_features: 'Features',
-      badge: 'COMING SOON',
+      badge: 'OUT NOW · FREE',
       hero_title: 'Climb from word to word,<br><em>one rung at a time.</em>',
       hero_lead: 'A Turkish word game: build a new word from the one on screen by adding a letter, removing a letter or changing letters. Every word you find becomes a new rung. Beat the clock, keep your lives, break your record.',
-      play_small: 'COMING SOON', hero_more: 'How to play',
+      play_small: 'GET IT ON', play_big: 'Google Play', hero_more: 'How to play',
+      as_small: 'DOWNLOAD ON THE', as_big: 'App Store',
       fact_words: 'words', fact_levels: 'levels', fact_offline: 'Single or multiplayer mode',
       op_addchg: 'ADD + CHANGE', op_chg: 'CHANGE', op_add: 'ADD', op_remchg: 'REMOVE + CHANGE',
       how_eyebrow: 'How to play', how_title: 'One operation per move',
@@ -288,8 +302,8 @@
       f4_t: 'Built-in Turkish keyboard', f4_d: 'Turkish Q or F layout, adjustable key size. No autocorrect.',
       f5_t: 'Records and discoveries', f5_d: 'Best score per level, all-time total points and the number of different words you discovered.',
       f6_t: 'Online tables (soon)', f6_d: 'Race your friends on the same questions at 2- or 4-player tables.',
-      cta_eyebrow: 'Building the ladder', cta_title: 'Your first word is coming soon.',
-      cta_sub: 'Kelime Basamağı is coming soon to Google Play.',
+      cta_eyebrow: 'The ladder is ready', cta_title: 'Your first rung is waiting.',
+      cta_sub: 'Kelime Basamağı is free on Google Play and the App Store.',
       foot_home: '← MothenoX Apps', foot_privacy: 'Privacy Policy', foot_terms: 'Terms of Use', foot_support: 'Support'
     };
     const TR = {};
@@ -311,6 +325,18 @@
     document.getElementById('langToggle').addEventListener('click', () => { lang = lang === 'tr' ? 'en' : 'tr'; setLang(lang); });
 
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Highlight the visitor's own store and show it first in each button row.
+    (function () {
+      var ua = navigator.userAgent || '';
+      var isIOS = /iPhone|iPad|iPod/i.test(ua) || (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1);
+      var mine = isIOS ? 'ios' : 'android';
+      document.querySelectorAll('.hero-buttons').forEach(function (row) {
+        var btn = row.querySelector('[data-store="' + mine + '"]');
+        if (btn) { btn.classList.add('primary-store'); row.insertBefore(btn, row.firstChild); }
+      });
+    })();
+
     if ('IntersectionObserver' in window) {
       const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.12 });
       document.querySelectorAll('.reveal').forEach(el => io.observe(el));
